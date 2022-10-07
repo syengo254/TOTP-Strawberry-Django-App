@@ -21,7 +21,7 @@ class UserType:
     @strawberry_django.field
     def two_fa_enabled(self, info) -> bool:
         user_device = TOTPDevice.objects.filter(user=self).first()
-        enabled = True if user_device.confirmed else False
+        enabled = user_device.confirmed if user_device else False
         return enabled
 
     @strawberry_django.field

@@ -7,7 +7,7 @@ import LogoutPage from './components/LogoutPage'
 function App() {
 
   return (
-    <div>
+    <div className='app'>
       <Routes>
         <Route path='/' element={<LoginPage />} />
         <Route path='/logout' element={<LogoutPage />} />

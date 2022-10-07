@@ -51,12 +51,12 @@ class DisableTwoFactor:
 @strawberry.type
 class LoginResult:
     user: Optional["UserType"]
-    msessage: str
+    message: str
 
 
 @strawberry.type
 class LogoutResult:
-    msessage: str
+    message: str
 
 
 @strawberry.type
