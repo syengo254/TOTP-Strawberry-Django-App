@@ -8,6 +8,7 @@ query {
         id
         username
         twoFaEnabled
+        twoFactorAuthenticated
       }
       loggedIn
     }
@@ -20,7 +21,6 @@ export default function useAuth(setUser: any){
 
     useEffect(() => {
         if(data && data.isUserLoggedin){
-            console.log(data)
             const {user, loggedIn} = data.isUserLoggedin;
             if(loggedIn){
                 setUser(user);

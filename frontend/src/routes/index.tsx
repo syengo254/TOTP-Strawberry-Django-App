@@ -1,3 +1,4 @@
+import CodeViewPage from "../components/CodeViewPage";
 import Dashboard from "../components/Dashboard";
 import LoginPage from "../components/LoginPage";
 import LogoutPage from "../components/LogoutPage";
@@ -26,6 +27,11 @@ const routes = [
     {
         path: '/settings',
         element: <UserSettings />,
+        requiresAuth: true,
+    },
+    {
+        path: '/verification',
+        element: <CodeViewPage />,
         requiresAuth: true,
     },
 ]

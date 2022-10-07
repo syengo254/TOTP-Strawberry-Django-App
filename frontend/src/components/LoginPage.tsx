@@ -19,7 +19,7 @@ mutation($username: String!, $password: String!) {
 `
 
 const LoginPage = () => {
-    const { setUser, authenticated } = useUserContext();
+    const { setUser, authenticated, twoFactorUnverified } = useUserContext();
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errMsg, setErrMsg] = useState('')
@@ -59,8 +59,11 @@ const LoginPage = () => {
     }
 
     useEffect(() => {
-        if (authenticated) {
+        if (authenticated && !twoFactorUnverified) {
             navigate('/dashboard');
+        }
+        if(authenticated && twoFactorUnverified){
+            navigate('/verification')
         }
     }, [authenticated]);
 

@@ -67,7 +67,9 @@ class VerifyTokenResult:
 @strawberry.type
 class VerifyToken:
     @strawberry.mutation
-    def verify_token(self, info, token: str) -> VerifyTokenResult:
+    def verify_token(
+        self, info, token: str, setup: Optional[bool] = False
+    ) -> VerifyTokenResult:
         user = info.context.request.user
         if not user.is_authenticated:
             raise Exception("User not logged in")
@@ -75,7 +77,7 @@ class VerifyToken:
         device = get_user_totp_device(user)
         verified = device.verify_token(token)
 
-        if not device.confirmed:
+        if setup and not device.confirmed:
             device.confirmed = True
             device.save()
         if verified:

@@ -1,10 +1,22 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import { useUserContext } from './context/UserContext'
-import routes, { getAuthorized } from './routes'
+import routes, { getAuthorized } from './routes';
+import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 function App() {
-  const { authenticated } = useUserContext();
+  const { authenticated, twoFactorUnverified } = useUserContext();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(!authenticated){
+        navigate('/')
+    }
+    if(authenticated && twoFactorUnverified){
+        navigate('/verification')
+    }
+}, [authenticated, twoFactorUnverified]);
 
   return (
     <div className='app'>

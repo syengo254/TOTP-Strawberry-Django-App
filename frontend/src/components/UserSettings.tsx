@@ -1,6 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
+import useVerify from "../hooks/auth/useVerify";
 import Navbar from "./Navbar";
 
 const ENABLE_TWO_FACTOR = gql`
@@ -32,14 +34,6 @@ mutation DisableTwoFactor {
   }
 `
 
-const VERIFY_TOKEN = gql`
-mutation VerifyToken($token: String!) {
-    verifyToken(token: $token) {
-        message
-        success
-    }
-}
-`
 const VERIFY_PASSWORD = gql`
 mutation VerifyPassword($password: String!) {
     verifyPassword(password: $password) {
@@ -52,34 +46,11 @@ mutation VerifyPassword($password: String!) {
 const QRCodeView = ({device} : any) => {
     const { setUser } = useUserContext();
     const [qrcode, setQrcode] = useState('');
-    const [verifyMutation, {loading}] = useMutation(VERIFY_TOKEN);
-    const [verifyError, setVerifyError] = useState('')
-    const [verifySuccess, setVerifySuccess] = useState(false);
+    const { handleVerify, success, error: verifyError, loading } = useVerify(true);
 
-    const handleVerify = (e: FormEvent) => {
-        e.preventDefault()
-        if(!qrcode || qrcode.length < 6) return;
+    if(success){
+        setUser((old:any) => ({...old, twoFaEnabled: true}));
 
-        verifyMutation({
-            variables: {
-                token: qrcode,
-            }
-        })
-        .then(res => {
-            const {success, message} = res.data.verifyToken;
-            if(success){
-                setVerifySuccess(true);
-                if(verifyError) setVerifyError('');
-                setUser((old:any) => ({...old, twoFaEnabled: true}));
-            }
-            else {
-                setVerifyError(message)
-            }
-        })
-        .catch( err => setVerifyError(err.message));
-    }
-
-    if(verifySuccess){
         return (
             <div>
                 Congratulations! You successfully setup two factor authentication.
@@ -93,7 +64,7 @@ const QRCodeView = ({device} : any) => {
             <img src={`http://localhost:8000/${device.qrCode}`} alt="qr-code" width={300} />
             <p>Incase you do not have a QR Code scanner app, enter the below code directly on your authenticator app e.g. Google Authenticator</p>
             <input type="text" value={device.key} readOnly />
-            <form onSubmit={handleVerify}>
+            <form onSubmit={e => handleVerify(e, qrcode)}>
                 <label>
                     <p>Enter the code displayed on your authenticator app:</p>
                     <input type="text" value={qrcode} onChange={ e => setQrcode(e.target.value.trim())} required/>
@@ -173,6 +144,8 @@ const UserSettings = () => {
     const handleClick = () => {
         if(twoFaEnabled){
             // disable
+            if(!window.confirm("Are you sure?")) return;
+
             disableTwoFactorMutation()
             .then((res) => {
                 const { disableTwoFactor } = res.data

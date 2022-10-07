@@ -17,7 +17,7 @@ const LogoutPage = () => {
 
     useEffect(() => {
         logoutMutation()
-        .then(res => {
+        .then(_ => {
             setUser(null);
         })
         .catch( e => console.log(e))
