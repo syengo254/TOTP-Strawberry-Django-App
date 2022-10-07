@@ -148,7 +148,7 @@ const PasswordConfirmView = ({setShowPasswordConfirm}: any) => {
                     <p>
                         Password:
                     </p>
-                    <input type="text" value={password} onChange={e => setPassword(e.target.value.trim())}  required/>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value.trim())}  required/>
                 </label>
                 <div style={{ marginTop: '1rem'}}>
                 <button type="submit" disabled={loading}>Verify</button>

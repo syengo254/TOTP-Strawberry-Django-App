@@ -1,7 +1,8 @@
 const CodeViewPage = () => {
     return ( 
         <div>
-            <h2>Enter the code from authenticator to proceed</h2>
+            <h2>Two Factor Authentication</h2>
+            <small>Enter the code from authenticator app to proceed.</small>
             <hr />
             <form>
                 <label>
