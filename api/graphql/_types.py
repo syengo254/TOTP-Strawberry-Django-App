@@ -1,3 +1,6 @@
+from typing import Optional
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+from django.contrib.admin.sites import AdminSite
 import strawberry
 import strawberry_django
 
@@ -6,6 +9,8 @@ from base64 import b32encode
 from django.contrib.auth.models import User
 
 from django_otp.plugins.otp_totp.models import TOTPDevice
+
+from api.graphql.utils import get_user_totp_device, is_user_two_fa_enabled
 
 
 @strawberry_django.type(User)
@@ -20,16 +25,18 @@ class UserType:
 
     @strawberry_django.field
     def two_fa_enabled(self, info) -> bool:
-        user_device = TOTPDevice.objects.filter(user=self).first()
-        enabled = user_device.confirmed if user_device else False
-        return enabled
+        return is_user_two_fa_enabled(self)
+
+    @strawberry.field
+    def two_factor_authenticated(self, info) -> bool:
+        user = info.context.request.user
+        return user.is_authenticated and info.context.request.session.get(
+            "fa_authenticated", False
+        )
 
     @strawberry_django.field
-    def totp_device(self, info) -> "TOTPDeviceType":
-        device = self.objects.device__set.first()
-        if not device.id:
-            device = TOTPDevice.objects.none()
-        return device
+    def totp_device(self, info) -> Optional["TOTPDeviceType"]:
+        return get_user_totp_device(info.context.request.user)
 
 
 @strawberry_django.type(TOTPDevice)
@@ -45,4 +52,4 @@ class TOTPDeviceType:
 
     @strawberry_django.field
     def qr_code(self, info) -> str:
-        return f"admin/oto_totp/totpdevice/{self.id}/qrcode/"
+        return f"qrcode/{self.id}/"

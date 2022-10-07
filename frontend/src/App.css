@@ -8,3 +8,12 @@
 h1, h2, h3 {
     text-align: center;
 }
+
+a {
+    color: #0000ee;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

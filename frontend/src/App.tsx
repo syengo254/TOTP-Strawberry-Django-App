@@ -1,17 +1,17 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Dashboard from './components/Dashboard'
-import LoginPage from './components/LoginPage'
-import LogoutPage from './components/LogoutPage'
+import { useUserContext } from './context/UserContext'
+import routes, { getAuthorized } from './routes'
 
 function App() {
+  const { authenticated } = useUserContext();
 
   return (
     <div className='app'>
       <Routes>
-        <Route path='/' element={<LoginPage />} />
-        <Route path='/logout' element={<LogoutPage />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        {
+          routes.map((route: any) => <Route key={route.path} path={route.path} element={route.requiresAuth ? getAuthorized(route.element, authenticated) : route.element} />)
+        }
       </Routes>
     </div>
   )

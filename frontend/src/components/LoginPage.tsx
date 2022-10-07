@@ -3,7 +3,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
-const LOGIN_USER = gql`
+export const LOGIN_USER = gql`
 mutation($username: String!, $password: String!) {
     userLogin(username: $username , password: $password){
       user {
@@ -11,6 +11,7 @@ mutation($username: String!, $password: String!) {
         username
         email
         twoFaEnabled
+        twoFactorAuthenticated
       }
       message
     }

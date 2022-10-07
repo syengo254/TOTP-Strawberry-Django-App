@@ -22,8 +22,12 @@ from django.views.decorators.csrf import csrf_exempt
 from strawberry.django.views import GraphQLView
 from api.graphql import schema
 
+from api.views import qrcode_view
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(r"", include(tf_urls)),
     path("graphql/", csrf_exempt(GraphQLView.as_view(schema=schema))),
+    path("qrcode/<int:pk>/", qrcode_view, name="user-qr-code"),
 ]
