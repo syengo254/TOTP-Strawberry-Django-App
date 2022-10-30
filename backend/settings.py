@@ -34,7 +34,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     os.getenv("APP_URL", "http://127.0.0.1:5173"),
 ]
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_HTTPONLY = False
 
