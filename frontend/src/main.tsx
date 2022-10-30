@@ -8,7 +8,7 @@ import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client'
 import { UserContextProvider } from './context/UserContext'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8000/graphql/',
+  uri: import.meta.env["VITE_API_URL"] || 'http://localhost:8000/graphql/',
   cache: new InMemoryCache(),
   credentials: 'include',
 })
