@@ -19,5 +19,7 @@ strawberry-graphql==0.133.5
 strawberry-graphql-django==0.5.3
 tomli==2.0.1
 typing_extensions==4.4.0
+wheel==0.37.1
 gunicorn==20.1.0
+psycopg2==2.9.5
 dj-database-url==1.0.0
