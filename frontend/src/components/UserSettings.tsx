@@ -47,13 +47,14 @@ const QRCodeView = ({device} : any) => {
     const { setUser } = useUserContext();
     const [qrcode, setQrcode] = useState('');
     const { handleVerify, success, error: verifyError, loading } = useVerify(true);
+    const apiUrl = import.meta.env["VITE_API_URL"] || "http://localhost:8000/";
 
     if(success){
         setUser((old:any) => ({...old, twoFaEnabled: true}));
 
         return (
             <div>
-                Congratulations! You successfully setup two factor authentication.
+                Congratulations! You have successfully setup two factor authentication.
             </div>
         )
     }
@@ -61,7 +62,7 @@ const QRCodeView = ({device} : any) => {
     return (
         <div>
             <p>Scan the below QR code with your authenticator app and then enter the code shown on the authenticator app below to verify.</p>
-            <img src={`http://localhost:8000/${device.qrCode}`} alt="qr-code" width={300} />
+            <img src={`${apiUrl}${device.qrCode}`} alt="qr-code" width={300} />
             <p>Incase you do not have a QR Code scanner app, enter the below code directly on your authenticator app e.g. Google Authenticator</p>
             <input type="text" value={device.key} readOnly />
             <form onSubmit={e => handleVerify(e, qrcode)}>
